@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json" />
+    <title>Presentation PWA</title>
+</head>
+
+<body>
+<!-- File management modal -->
+<div id="file-management" class="hidden">
+    <div id="file-management-header">
+        <h1>File Management</h1>
+        <button id="file-management-close">close</button>
+    </div>
+
+    <div id="folder-management">
+        <!-- Folder creation form -->
+        <form id="new-folder-form">
+            <label for="folder-name">New Folder:</label>
+            <input type="text" id="folder-name">
+            <button type="submit">Create</button>
+        </form>
+    </div>
+
+    <div id="folder-container">
+        <!-- Folder sections will be created dynamically here -->
+    </div>
+
+</div>
+
+
+<header>
+    <nav>
+        <div id="file-controls">
+            <button id="file-button">Files</button>
+        </div>
+        <div id="speech-synthesis-controls">
+            <div id="voice-selection">
+                <label for="voice-select">Voice:</label>
+                <select id="voice-select"></select>
+            </div>
+            <div id="speed-control">
+                <label for="speed-range">Speed:</label>
+                <input type="range" id="speed-range" min="0.25" max="2" step="0.25" value="1" onchange="updateSpeed()">
+                <span id="speed-value">1</span>
+            </div>
+            <div id="pitch-control">
+                <label for="pitch-range">Pitch:</label>
+                <input type="range" id="pitch-range" min="0" max="2" step="0.1" value="1" onchange="updatePitch()">
+                <span id="pitch-value">1</span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+    <section id="presentation-display">
+        <!-- PDF display area -->
+        <div id="pdf-container">
+            <canvas id="pdf-canvas" width="0" height="0"></canvas>
+            <div id="text-layer" style="position: absolute;"></div>
+        </div>        
+    </section>
+    <section id="guide-container">
+        <!-- Guide text and comment section -->
+        <div id="guide-text"></div>
+    </section>
+</main>
+
+<footer>
+    <div id="slide-controls">
+        <!-- Slide navigation buttons -->
+        <button id="prev-slide">Previous Slide</button>
+        <button id="next-slide">Next Slide</button>
+    </div>
+    <div id="voice-controls">
+        <!-- Voice control buttons -->
+        <button id="play-voice">Play</button>
+        <button id="pause-voice">Pause</button>
+        <button id="stop-voice">Stop</button>
+    </div>
+</footer>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(function() { console.log('Service Worker Registered'); });
+    }
+</script>
+
+<script src="pdfjs/build/pdf.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/pdf-renderer.js"></script>
+<script src="js/file-manager.js"></script>
+<script src="js/speech-synthesis.js"></script>
+</body>
+
+</html>

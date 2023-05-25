@@ -1,0 +1,160 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* CSS */
+/* CSS for hiding and showing the file management modal */
+#file-management {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    overflow: auto;
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+#file-management-header{
+    color: white;
+    text-align: center;
+}
+
+#file-management.active {
+    display: block;
+}
+
+/* CSS for the folder and file management sections */
+#folder-container, #folder-management, #file-upload-section {
+    width: 60%; /* Adjust as needed */
+    margin: 0 auto; /* Center the sections */
+    background: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.folder {
+    border: 1px solid #ccc;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.folder-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-name {
+    margin: 0;
+}
+
+.folder-files {
+    margin-top: 1em;
+}
+
+.hidden{
+    display: none;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #d3d3d3;
+}
+
+#speech-synthesis-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#speech-synthesis-controls div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+main {
+    background-color: #ffffff;
+    height: 80%;
+    display: flex;
+    justify-content: space-around;
+    padding: 1em;
+    overflow: auto;
+}
+
+footer {
+    background-color: #d3d3d3;
+    height: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1em;
+}
+
+#presentation-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 70%;
+}
+
+#pdf-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#guide-container {
+    width: 20%;
+    height: 100%;
+    display: flex;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* pdf */
+
+#pdf-canvas{
+    position: absolute;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#text-layer span{
+    position: absolute;
+    color: transparent;
+    background-color: transparent;
+}
+
+#text-layer span::selection{
+    background-color: rgba(0, 0, 255, 0.3);
+}
+
+
+#guide-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px;
+    word-break: break-word;
+}
