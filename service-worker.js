@@ -5,7 +5,6 @@ let cacheName = 'v1';
 
 // Default files to always cache
 let cacheFiles = [
-    '/',
     'assets/images/icons/icon.png',
     'index.html',
     'manifest.json',
