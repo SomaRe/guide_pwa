@@ -88,7 +88,7 @@
 
 <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/guide_pwa/service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
             .then(function() { console.log('Service Worker Registered'); });
     }
 </script>
