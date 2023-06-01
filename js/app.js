@@ -47,7 +47,7 @@ document.getElementById("next-slide").addEventListener("click", function () {
   function displayGuideText(num) {
     // TODO: Display the guide text for the current slide
     var slideText = guideText["slide " + num];
-    document.getElementById("guide-text").innerText = slideText;
+    document.querySelector("#guide-text p").innerText = slideText;
     stopVoice();
   }
 

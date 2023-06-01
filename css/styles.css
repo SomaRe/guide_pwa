@@ -120,13 +120,6 @@ footer {
     align-items: center;
 }
 
-
-#guide-container {
-    width: 20%;
-    height: 100%;
-    display: flex;
-}
-
 nav {
     width: 100%;
     display: flex;
@@ -150,11 +143,18 @@ nav {
     background-color: rgba(0, 0, 255, 0.3);
 }
 
+#guide-container {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
 
-#guide-text {
+#guide-text p{
+    max-height: 80%;
+    overflow: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 15px;
     word-break: break-word;
 }
