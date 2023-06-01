@@ -28,10 +28,8 @@ openRequest.onsuccess = function (e) {
           folderExists = true;
           var filesDiv = folderDivs[i].querySelector(".folder-files");
           var fileP = document.createElement("p");
+          fileP.className = "file";
           fileP.textContent = fileName;
-          fileP.addEventListener("click", function () {
-            openFile(folderName, this.textContent);
-          });
           filesDiv.appendChild(fileP);
         }
       }
@@ -41,9 +39,7 @@ openRequest.onsuccess = function (e) {
           folderDivs[folderDivs.length - 1].querySelector(".folder-files");
         var fileP = document.createElement("p");
         fileP.textContent = fileName;
-        fileP.addEventListener("click", function () {
-          openFile(folderName, this.textContent);
-        });
+        fileP.className = "file";
         filesDiv.appendChild(fileP);
       }
       cursor.continue();
@@ -57,6 +53,17 @@ document
   .addEventListener("submit", function (e) {
     e.preventDefault();
     var folderName = document.getElementById("folder-name").value;
+
+    // Check if folder name already exists
+    var existingFolders = document.querySelectorAll(".folder-name");
+    for (var isFolder of existingFolders) {
+      if (isFolder.textContent === folderName) {
+        alert("Folder name already exists!");
+        folderNameInput.value = ""; // Clear the input field
+        return; // Exit the function to prevent further execution
+      }
+    }
+
     if (folderName) {
       createFolderSection(folderName);
       document.getElementById("folder-name").value = "";
@@ -144,6 +151,9 @@ function uploadFilesToFolderSection(folderName, files) {
               var file = files[j];
               var fileP = document.createElement('p');
               fileP.textContent = file.name;
+              fileP.className = 'file';
+              // add foldername as data attribute
+              fileP.dataset.folder = folderName;
               filesDiv.appendChild(fileP);
 
               // Read the file as a Blob
@@ -180,3 +190,10 @@ function deleteFolderSection(folderDiv) {
     folderDiv.parentNode.removeChild(folderDiv);
   };
 }
+
+document.addEventListener("click", function (e) {
+  if (e.target.className == "file") {
+    console.log("file clicked");
+    openFile(e.target.dataset.folder, e.target.textContent);
+  }
+});
