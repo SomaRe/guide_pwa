@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation PWA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="manifest" href="manifest.json" />
-    <title>Presentation PWA</title>
 </head>
 
 <body>
@@ -36,7 +37,7 @@
 <header>
     <nav>
         <div id="file-controls">
-            <button id="file-button">Files</button>
+            <button id="file-button" class="btn btn-outline-info">Files</button>
         </div>
         <div id="speech-synthesis-controls">
             <div id="voice-selection">
@@ -77,17 +78,18 @@
 <footer>
     <div id="slide-controls">
         <!-- Slide navigation buttons -->
-        <button id="prev-slide">Previous Slide</button>
-        <button id="next-slide">Next Slide</button>
+        <button id="prev-slide" class="btn btn-outline-primary">Previous Slide</button>
+        <button id="next-slide" class="btn btn-outline-primary">Next Slide</button>
     </div>
     <div id="voice-controls">
         <!-- Voice control buttons -->
-        <button id="play-voice">Play</button>
-        <button id="pause-voice">Pause</button>
-        <button id="stop-voice">Stop</button>
+        <button id="play-voice" class="btn btn-outline-success">Play</button>
+        <button id="pause-voice" class="btn btn-outline-light">Pause</button>
+        <button id="stop-voice" class="btn btn-outline-danger">Stop</button>
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
