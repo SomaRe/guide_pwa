@@ -29,6 +29,7 @@ openRequest.onsuccess = function (e) {
           var filesDiv = folderDivs[i].querySelector(".folder-files");
           var fileP = document.createElement("p");
           fileP.className = "file";
+          fileP.dataset.folder = folderName;
           fileP.textContent = fileName;
           filesDiv.appendChild(fileP);
         }
@@ -40,6 +41,7 @@ openRequest.onsuccess = function (e) {
         var fileP = document.createElement("p");
         fileP.textContent = fileName;
         fileP.className = "file";
+        fileP.dataset.folder = folderName;
         filesDiv.appendChild(fileP);
       }
       cursor.continue();
@@ -144,32 +146,35 @@ function createFolderSection(name) {
 function uploadFilesToFolderSection(folderName, files) {
   var folderDivs = document.getElementsByClassName('folder');
   for (var i = 0; i < folderDivs.length; i++) {
-      var nameP = folderDivs[i].querySelector('.folder-name');
-      if (nameP.textContent === folderName) {
-          var filesDiv = folderDivs[i].querySelector('.folder-files');
-          for (var j = 0; j < files.length; j++) {
-              var file = files[j];
-              var fileP = document.createElement('p');
-              fileP.textContent = file.name;
-              fileP.className = 'file';
-              // add foldername as data attribute
-              fileP.dataset.folder = folderName;
-              filesDiv.appendChild(fileP);
-
-              // Read the file as a Blob
-              var fileReader = new FileReader();
-              fileReader.onload = function(event) {
-                  var blob = new Blob([event.target.result]);
-                  
-                  // Store the Blob in IndexedDB
-                  var transaction = db.transaction(['files'], 'readwrite');
-                  var store = transaction.objectStore('files');
-                  store.put(blob, [folderName, file.name]);
-              };
-              fileReader.readAsArrayBuffer(file);
-          }
+    var nameP = folderDivs[i].querySelector('.folder-name');
+    if (nameP.textContent === folderName) {
+      var filesDiv = folderDivs[i].querySelector('.folder-files');
+      for (var j = 0; j < files.length; j++) {
+        uploadFile(files[j], folderName, filesDiv);
       }
+    }
   }
+}
+
+function uploadFile(file, folderName, filesDiv) {
+  var fileP = document.createElement('p');
+  fileP.textContent = file.name;
+  fileP.className = 'file';
+  // add foldername as data attribute
+  fileP.dataset.folder = folderName;
+  filesDiv.appendChild(fileP);
+
+  // Read the file as a Blob
+  var fileReader = new FileReader();
+  fileReader.onload = function(event) {
+    var blob = new Blob([event.target.result]);
+
+    // Store the Blob in IndexedDB
+    var transaction = db.transaction(['files'], 'readwrite');
+    var store = transaction.objectStore('files');
+    store.put(blob, [folderName, file.name]);
+  };
+  fileReader.readAsArrayBuffer(file);
 }
 
 
@@ -193,7 +198,6 @@ function deleteFolderSection(folderDiv) {
 
 document.addEventListener("click", function (e) {
   if (e.target.className == "file") {
-    console.log("file clicked");
     openFile(e.target.dataset.folder, e.target.textContent);
   }
 });
