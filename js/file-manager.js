@@ -1,7 +1,18 @@
+// Add File to Div
+function addFileToDiv(folderName, fileName, filesDiv) {
+  var fileP = document.createElement("p");
+  fileP.className = "file";
+  fileP.dataset.folder = folderName;
+  fileP.textContent = fileName;
+  filesDiv.appendChild(fileP);
+}
+
+
 // Open (or create) the IndexedDB database
 var openRequest = indexedDB.open("PWA_DB", 1);
 var db;
 
+// auto incrementing keyPath
 openRequest.onupgradeneeded = function (e) {
   var db = e.target.result;
   if (!db.objectStoreNames.contains("files")) {
@@ -9,6 +20,7 @@ openRequest.onupgradeneeded = function (e) {
   }
 };
 
+// when we have the db, display the existing folders
 openRequest.onsuccess = function (e) {
   db = e.target.result;
   // display the existing folders
@@ -27,29 +39,22 @@ openRequest.onsuccess = function (e) {
         if (nameP.textContent === folderName) {
           folderExists = true;
           var filesDiv = folderDivs[i].querySelector(".folder-files");
-          var fileP = document.createElement("p");
-          fileP.className = "file";
-          fileP.dataset.folder = folderName;
-          fileP.textContent = fileName;
-          filesDiv.appendChild(fileP);
+
+          addFileToDiv(folderName, fileName, filesDiv);
         }
       }
       if (!folderExists) {
         createFolderSection(folderName);
         var filesDiv =
           folderDivs[folderDivs.length - 1].querySelector(".folder-files");
-        var fileP = document.createElement("p");
-        fileP.textContent = fileName;
-        fileP.className = "file";
-        fileP.dataset.folder = folderName;
-        filesDiv.appendChild(fileP);
+        addFileToDiv(folderName, fileName, filesDiv);
       }
       cursor.continue();
     }
   };
 };
 
-// JavaScript
+// Submit 
 document
   .getElementById("new-folder-form")
   .addEventListener("submit", function (e) {
@@ -75,6 +80,9 @@ document
 function createFolderSection(name) {
   var folderDiv = document.createElement("div");
   folderDiv.className = "folder";
+  
+  var filesArray = [];
+  folderDiv.dataset.files = JSON.stringify(filesArray);
 
   var headerDiv = document.createElement("div");
   headerDiv.className = "folder-header";
@@ -157,12 +165,7 @@ function uploadFilesToFolderSection(folderName, files) {
 }
 
 function uploadFile(file, folderName, filesDiv) {
-  var fileP = document.createElement('p');
-  fileP.textContent = file.name;
-  fileP.className = 'file';
-  // add foldername as data attribute
-  fileP.dataset.folder = folderName;
-  filesDiv.appendChild(fileP);
+  addFileToDiv(folderName, file.name, filesDiv);
 
   // Read the file as a Blob
   var fileReader = new FileReader();
@@ -196,6 +199,7 @@ function deleteFolderSection(folderDiv) {
   };
 }
 
+// event delegation to handle clicks on file names
 document.addEventListener("click", function (e) {
   if (e.target.className == "file") {
     openFile(e.target.dataset.folder, e.target.textContent);

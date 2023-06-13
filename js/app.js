@@ -18,12 +18,19 @@ function updatePitch(){
   document.getElementById("pitch-value").innerText = pitch;
 }
 
+function updateProgressBar(){
+  var progressBar = document.getElementById("file-progress");
+  var value = Math.round((pageNum / pdf.numPages) * 100);
+  progressBar.value = value;
+}
+
 function prevSlide() {
   if (pageNum > 1) {
     pageNum--;
     renderPage(pageNum);
     displayGuideText(pageNum);
   }
+  updateProgressBar();
 };
 
 function nextSlide() {
@@ -33,8 +40,15 @@ function nextSlide() {
     displayGuideText(pageNum);
     stopVoice();
   }
+  updateProgressBar();
 };
 
+function displayGuideText(num) {
+  // TODO: Display the guide text for the current slide
+  var slideText = guideText["slide " + num];
+  document.querySelector("#guide-text p").innerText = slideText;
+  stopVoice();
+}
 
 document.getElementById("prev-slide").addEventListener("click", function () {
     prevSlide();
@@ -43,13 +57,6 @@ document.getElementById("prev-slide").addEventListener("click", function () {
 document.getElementById("next-slide").addEventListener("click", function () {
     nextSlide();
   });
-
-  function displayGuideText(num) {
-    // TODO: Display the guide text for the current slide
-    var slideText = guideText["slide " + num];
-    document.querySelector("#guide-text p").innerText = slideText;
-    stopVoice();
-  }
 
 document.addEventListener('keydown', function(event) {
   switch (event.key) {

@@ -1,15 +1,27 @@
-window.speechSynthesis.onvoiceschanged = function () {
-  var voices = window.speechSynthesis.getVoices();
-  var englishVoices = voices.filter((voice) => voice.lang.includes("en"));
-  var voiceSelect = document.getElementById("voice-select");
+// This is a dirty (not elegant) way but the only one that seems to work on firefox
+let synth = window.speechSynthesis;
+
+let ids = setInterval(() => {
+  if (synth.getVoices().length !== 0) {
+    voicesLoaded();
+    clearInterval(ids);
+  }
+}, 10);
+
+function voicesLoaded() {
+  let voices = synth.getVoices();
+  let englishVoices = voices.filter(voice => voice.lang.includes("en"));
+  let voiceSelect = document.getElementById("voice-select");
 
   englishVoices.forEach((voice, index) => {
-    var option = document.createElement("option");
+    let option = document.createElement("option");
     option.textContent = voice.name;
     option.value = index;
     voiceSelect.appendChild(option);
   });
-};
+}
+
+
 
 var isPaused = false; // Flag to track the pause status
 

@@ -55,7 +55,6 @@ function openFile(folderName, fileName) {
 };
 
 
-
 }
 
 function renderPage(num) {
@@ -110,6 +109,7 @@ function renderPage(num) {
         // console.log("Text layer rendered");
       });
   });
+  updateProgressBar();
 }
 
 function splitGuideIntoSlides(guide) {
