@@ -3,6 +3,7 @@ var pageNum = 1; // The current page number
 var guideText; // The guide text for each slide
 
 function openFile(folderName, fileName) {
+  pageNum = 1;
   document.getElementById("file-management").classList.remove("active");
 
   var transaction = db.transaction(["files"]);
@@ -114,17 +115,17 @@ function renderPage(num) {
 
 function splitGuideIntoSlides(guide) {
   var slides = {};
-  var slideNumberPattern = /slide \d+/g;
+  var slideNumberPattern = /[Ss]lide:* \d+/gi; // [Ss]lide:* \d+
   var slideNumbers = guide.match(slideNumberPattern);
 
   for (var i = 0; i < slideNumbers.length - 1; i++) {
     var start = guide.indexOf(slideNumbers[i]);
     var end = guide.indexOf(slideNumbers[i + 1]);
-    slides[slideNumbers[i]] = guide.substring(start, end).replace(slideNumbers[i], '').trim();
+    slides[slideNumbers[i].match(/\d+/)[0]] = guide.substring(start, end).replace(slideNumbers[i], '').trim();
   }
 
   // Add the last slide
-  slides[slideNumbers[slideNumbers.length - 1]] = guide.substring(guide.indexOf(slideNumbers[slideNumbers.length - 1])).replace(slideNumbers[slideNumbers.length - 1], '').trim();
+  slides[slideNumbers[slideNumbers.length - 1].match(/\d+/)[0]] = guide.substring(guide.indexOf(slideNumbers[slideNumbers.length - 1])).replace(slideNumbers[slideNumbers.length - 1], '').trim();
 
   return slides;
 }

@@ -74,6 +74,20 @@ body {
     display: none;
 }
 
+.missing{
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    border: 1px solid #ddd;
+}
+
+.file, .file_guide{
+    padding: 5px;
+}
+
 header {
     display: flex;
     justify-content: space-between;

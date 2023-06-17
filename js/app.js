@@ -44,19 +44,18 @@ function nextSlide() {
 };
 
 function displayGuideText(num) {
-  // TODO: Display the guide text for the current slide
-  var slideText = guideText["slide " + num];
+  var slideText = guideText[num]; 
   document.querySelector("#guide-text p").innerText = slideText;
   stopVoice();
 }
 
 document.getElementById("prev-slide").addEventListener("click", function () {
-    prevSlide();
-  });
-  
+  prevSlide();
+});
+
 document.getElementById("next-slide").addEventListener("click", function () {
-    nextSlide();
-  });
+  nextSlide();
+});
 
 document.addEventListener('keydown', function(event) {
   switch (event.key) {

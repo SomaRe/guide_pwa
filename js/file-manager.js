@@ -1,10 +1,108 @@
+let allFolsAndFils = {}; // Global object to store folder names and file names
+
+// Function to change structure of allFolsAndFils, such a way that inside session1, the files gets arranged
+// in pairs <filename> and <filename_GUIDE>, if one of them is missing, then its replaced with null
+// example:
+// {
+// 	"session1": {
+// 		"hello.pdf": "hello_GUIDE.pdf",
+// 		"world.pdf": "world_GUIDE.pdf",
+// 	}
+// }
+function arrangeInPairs(allFolsAndFils) {
+  var pairedFiles = {};
+
+  for (var folder in allFolsAndFils) {
+    var files = allFolsAndFils[folder];
+    var pairs = {};
+
+    files.forEach((file) => {
+      var baseName = file.replace("_GUIDE.pdf", ".pdf");
+
+      // If the file is a guide, find its base file. If not, find its guide.
+      if (file.endsWith("_GUIDE.pdf")) {
+        pairs[baseName] = pairs[baseName] || { baseFile: null, guideFile: null };
+        pairs[baseName].guideFile = file;
+      } else {
+        pairs[baseName] = pairs[baseName] || { baseFile: null, guideFile: null };
+        pairs[baseName].baseFile = file;
+      }
+    });
+
+    // Replace missing pairs with null
+    for (var baseName in pairs) {
+      pairs[baseName].baseFile = pairs[baseName].baseFile || "[missing]" + baseName;
+      pairs[baseName].guideFile = pairs[baseName].guideFile || "[missing]" + baseName + "_GUIDE.pdf";
+    }
+
+    pairedFiles[folder] = pairs;
+  }
+
+  return pairedFiles;
+}
+
+// sort the files in alphabetical order
+// function sortPairs(pairedFiles) {
+//   var sortedPairs = {};
+
+//   // Get the folders and sort them
+//   var folders = Object.keys(pairedFiles).sort();
+  
+//   folders.forEach((folder) => {
+//     var files = pairedFiles[folder];
+    
+//     // Get the files and sort them
+//     var sortedFiles = Object.keys(files).sort().reduce((acc, file) => {
+//       acc[file] = files[file];
+//       return acc;
+//     }, {});
+    
+//     sortedPairs[folder] = sortedFiles;
+//   });
+
+//   return sortedPairs;
+// }
+
 // Add File to Div
-function addFileToDiv(folderName, fileName, filesDiv) {
-  var fileP = document.createElement("p");
-  fileP.className = "file";
-  fileP.dataset.folder = folderName;
-  fileP.textContent = fileName;
-  filesDiv.appendChild(fileP);
+// function addFileToDiv(folderName, fileName, filesDiv) {
+//   var fileP = document.createElement("p");
+//   fileP.className = "file";
+//   fileP.dataset.folder = folderName;
+//   fileP.textContent = fileName;
+//   filesDiv.appendChild(fileP);
+// }
+
+// Add File to Table
+function addFileToTable(folderName, fileName, filePair, filesDiv) {
+  var table = filesDiv.querySelector("table");
+
+  if (!table) {
+    table = document.createElement("table");
+    table.className = "file";
+    table.dataset.folder = folderName;
+    filesDiv.appendChild(table);
+  }
+
+  var row = document.createElement("tr");
+
+  var fileCell = document.createElement("td");
+  fileCell.textContent = filePair.baseFile;
+  fileCell.className = "file";
+  if(fileCell.textContent.startsWith("[missing]")){
+    fileCell.classList.add("missing");
+  }
+  fileCell.dataset.folder = folderName;
+
+  var guideCell = document.createElement("td");
+  guideCell.textContent = filePair.guideFile;
+  guideCell.className = "file_guide";
+  if (guideCell.textContent.startsWith("[missing]")) {
+    guideCell.classList.add("missing");
+  }
+
+  row.appendChild(fileCell);
+  row.appendChild(guideCell);
+  table.appendChild(row);
 }
 
 
@@ -32,27 +130,42 @@ openRequest.onsuccess = function (e) {
     if (cursor) {
       var folderName = cursor.key[0];
       var fileName = cursor.key[1];
-      var folderDivs = document.getElementsByClassName("folder");
-      var folderExists = false;
-      for (var i = 0; i < folderDivs.length; i++) {
-        var nameP = folderDivs[i].querySelector(".folder-name");
-        if (nameP.textContent === folderName) {
-          folderExists = true;
-          var filesDiv = folderDivs[i].querySelector(".folder-files");
+      allFolsAndFils[folderName] = allFolsAndFils[folderName] || [];
+      allFolsAndFils[folderName].push(fileName);
+      // var folderDivs = document.getElementsByClassName("folder");
+      // var folderExists = false;
+      // for (var i = 0; i < folderDivs.length; i++) {
+      //   var nameP = folderDivs[i].querySelector(".folder-name");
+      //   if (nameP.textContent === folderName) {
+      //     folderExists = true;
+      //     var filesDiv = folderDivs[i].querySelector(".folder-files");
 
-          addFileToDiv(folderName, fileName, filesDiv);
+      //     addFileToDiv(folderName, fileName, filesDiv);
+      //   }
+      // }
+      // if (!folderExists) {
+      //   createFolderSection(folderName);
+      //   var filesDiv =
+      //     folderDivs[folderDivs.length - 1].querySelector(".folder-files");
+      //   addFileToDiv(folderName, fileName, filesDiv);
+      // }
+      cursor.continue();
+    }
+    else{
+      pairedFiles = arrangeInPairs(allFolsAndFils);
+      for(var folderName in pairedFiles){
+        createFolderSection(folderName);
+        folderLength = document.querySelectorAll(".folder-files").length;
+        var filesDiv = document.querySelectorAll(".folder-files")[folderLength-1];
+        for(var fileName in pairedFiles[folderName]){
+          addFileToTable(folderName, fileName, pairedFiles[folderName][fileName], filesDiv);
         }
       }
-      if (!folderExists) {
-        createFolderSection(folderName);
-        var filesDiv =
-          folderDivs[folderDivs.length - 1].querySelector(".folder-files");
-        addFileToDiv(folderName, fileName, filesDiv);
-      }
-      cursor.continue();
     }
   };
 };
+
+
 
 // Submit 
 document
@@ -72,6 +185,8 @@ document
     }
 
     if (folderName) {
+      // empty object to store file names
+      allFolsAndFils[folderName] = [];
       createFolderSection(folderName);
       document.getElementById("folder-name").value = "";
     }
@@ -158,6 +273,7 @@ function uploadFilesToFolderSection(folderName, files) {
     if (nameP.textContent === folderName) {
       var filesDiv = folderDivs[i].querySelector('.folder-files');
       for (var j = 0; j < files.length; j++) {
+        allFolsAndFils[folderName].push(files[j].name);
         uploadFile(files[j], folderName, filesDiv);
       }
     }
@@ -165,7 +281,17 @@ function uploadFilesToFolderSection(folderName, files) {
 }
 
 function uploadFile(file, folderName, filesDiv) {
-  addFileToDiv(folderName, file.name, filesDiv);
+  // clear the folder-container
+  document.getElementById("folder-container").innerHTML = "";
+  pairedFiles = arrangeInPairs(allFolsAndFils);
+  for(var folderName in pairedFiles){
+    createFolderSection(folderName);
+    folderLength = document.querySelectorAll(".folder-files").length;
+    var filesDiv = document.querySelectorAll(".folder-files")[folderLength-1];
+    for(var fileName in pairedFiles[folderName]){
+      addFileToTable(folderName, fileName, pairedFiles[folderName][fileName], filesDiv);
+    }
+  }
 
   // Read the file as a Blob
   var fileReader = new FileReader();
