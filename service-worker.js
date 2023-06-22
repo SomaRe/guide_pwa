@@ -1,7 +1,7 @@
 // service-worker.js
 
 // Set a name for the current cache
-let cacheName = 'v1.4'; 
+let cacheName = 'v1.41'; 
 
 // Default files to always cache
 let cacheFiles = [

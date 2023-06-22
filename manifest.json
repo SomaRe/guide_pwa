@@ -1,11 +1,11 @@
 {
-    "short_name": "MyApp",
-    "name": "My Amazing App",
+    "short_name": "Presentation and Guide Viewer",
+    "name": "Presentation and Guide Viewer",
     "icons": [
       {
-        "src": "assets/images/icons/icon.png",
+        "src": "assets/images/icons/alogoi.jpg",
         "type": "image/png",
-        "sizes": "192x192"
+        "sizes": "1024x1024"
       }
     ],
     "start_url": "/",
